@@ -1,0 +1,76 @@
+
+%\RequirePackage{pdf15}
+
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{mystyle}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{subcaption}
+
+\usepackage{natbib}
+\bibliographystyle{apalike}
+%\usepackage[style=authortitle,backend=biber]{biblatex}
+%\addbibresource{anthology.bib}
+%\addbibresource{emnlp2020.bib}
+\renewcommand{\footnotesize}{\scriptsize}
+
+\usepackage{tikz-dependency}
+\usetikzlibrary{shapes.arrows, positioning, fit, bayesnet,
+    arrows,backgrounds,patterns,matrix,calc,shadows,plotmarks,
+    shapes,positioning,automata,positioning,spy,scopes,chains,decorations,decorations.pathreplacing}
+
+\newcommand{\FancyUpArrow}{\begin{tikzpicture}[baseline=-0.3em]
+\node[single arrow,draw,rotate=90,single arrow head extend=0.2em,inner
+ysep=0.2em,transform shape,line width=0.05em,top color=green,bottom color=green!50!black] (X){};
+\end{tikzpicture}}
+\newcommand{\FancyDownArrow}{\begin{tikzpicture}[baseline=-0.3em]
+\node[single arrow,draw,rotate=-90,single arrow head extend=0.2em,inner
+ysep=0.2em,transform shape,line width=0.05em,top color=red,bottom color=red!50!black] (X){};
+\end{tikzpicture}}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+% quotes
+\usepackage[style=british]{csquotes}
+
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip1em
+  \hbox{}\nobreak\hfill #1%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+%Information to be included in the title page:
+\title{Best-First Rao Blackwellization}
+\author{J Chiu}
+
+\setbeamertemplate{navigation symbols}{} 
+\setbeamertemplate{footline}[frame number]
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+\begin{frame}[allowframebreaks]
+\frametitle{Citations}
+%\printbibliography
+\bibliography{bib.bib}
+\end{frame}
+
+\end{document}
