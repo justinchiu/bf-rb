@@ -109,6 +109,11 @@ $$\max_\theta \sum_x p_\theta(x)f(x)$$
 
 \begin{frame}
 \frametitle{Rao-Blackwellization}
+\begin{itemize}
+\item Too expensive to enumerate over all $x$ ($f$ is expensive)
+\item Reduce effective width of distribution via sub-sampling (red)
+\item Enumerate over green portion
+\end{itemize}
 \centering
 \begin{tikzpicture}
 \matrix (array) [matrix of nodes,ampersand replacement=\&]
@@ -146,6 +151,10 @@ f(1) \& f(2) \& f(3) \& f(4)\\
 
 \begin{frame}
 \frametitle{Structured Setting}
+\begin{itemize}
+\item In the flat setting, only cared about width
+\item In structured setting, can also approximate depth
+\end{itemize}
 \centering
 \begin{tikzpicture}
 \matrix (array) [matrix of nodes,ampersand replacement=\&]
@@ -213,7 +222,10 @@ Approximate DP when exact is tractable
     \begin{itemize}
     \item Limit num states considered at each time step
     \end{itemize}
-\item Both
+\item Approximations for width + depth
+    \begin{itemize}
+    \item Probably more useful in PCFGs
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
