@@ -167,16 +167,16 @@ f(1) \& f(2) \& f(3) \& f(4)\\
 \fill[red!10] (array-2-1.north west) rectangle (array-2-2.south east);
 \fill[green!10] (array-2-3.north west) rectangle (array-2-4.south east);
 \end{scope}
-\node [above=1cm of array] (flat) {Flat};
+\node [above=1.4cm of array] (flat) {Flat};
 
 \node [right=4cm of flat] (struct) {Structured};
 \node[fill=green!10, very thick, circle, minimum size=.7cm] (root) [below=0.5cm of struct] {r};
-\node[fill=red!10, very thick, circle, minimum size=.7cm] (0) [below left=0.5cm of root] {0};
-\node[fill=green!10, very thick, circle, minimum size=.7cm] (1) [below right=0.5cm of root] {1};
-\node[fill=red!10, very thick, circle, minimum size=.7cm] (00) [below left=0.5cm and -.1cm of 0] {00};
-\node[fill=red!10, very thick, circle, minimum size=.7cm] (01) [below right=0.5cm and -.1cm of 0] {01};
-\node[fill=red!10, very thick, circle, minimum size=.7cm] (10) [below left=0.5cm and -.1cm of 1] {10};
-\node[fill=red!10, very thick, circle, minimum size=.7cm] (11) [below right=0.5cm and -.1cm of 1] {11};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (0) [below left=0.75cm and .9cm of root] {f(0)};
+\node[fill=green!10, very thick, circle, minimum size=.7cm] (1) [below right=0.75cm and .9cm of root] {f(1)};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (00) [below left=0.75cm and -.1cm of 0] {f(00)};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (01) [below right=0.75cm and -.1cm of 0] {f(01)};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (10) [below left=0.75cm and -.1cm of 1] {f(10)};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (11) [below right=0.75cm and -.1cm of 1] {f(11)};
 \edge[->] {root} {0};
 \edge[->] {root} {1};
 \edge[->] {0} {00};
@@ -185,6 +185,22 @@ f(1) \& f(2) \& f(3) \& f(4)\\
 \edge[->] {1} {11};
 \end{tikzpicture}
 \end{frame}
+
+\begin{frame}
+\frametitle{Rao-Blackwellization of structured SFE}
+\begin{itemize}
+\item Maybe $f$ first-order additively decomposable over $x = x_{1:T}$?
+\item Cost-to-go estimate $\Es{x_{t+1:T}}{f(x_{t+1:T})} \approx \tilde{V}(x_{1:t})$
+\item Condition on values of $f(x_{1:t})$ for $x_{1:t}\in S$ (set of prefixes)
+    \begin{align*}
+    &\nabla_\theta \sum_x p_\theta(x)f(x)\\
+    &= \Es{p_\theta(x)}{f(x)\nabla \log p_\theta(x)}\\
+    &\approx \sum_{x_{1:t}\in S} p(x){(f(x_{1:t}) + \tilde{V}(x_{1:t}))}\nabla \log p_\theta(x_{1:t})\\
+    &\qquad + \Es{p_\theta(x \notin S)}{f(x)\nabla \log p_\theta(x)}
+    \end{align*}
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Best-first Rao-Blackwellization}
