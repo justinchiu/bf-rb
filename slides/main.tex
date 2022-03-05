@@ -56,7 +56,7 @@ ysep=0.2em,transform shape,line width=0.05em,top color=red,bottom color=red!50!b
   {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
 
 %Information to be included in the title page:
-\title{Best-First Rao Blackwellization}
+\title{Best-First Rao-Blackwellization}
 \author{J Chiu}
 
 \setbeamertemplate{navigation symbols}{} 
@@ -67,6 +67,117 @@ ysep=0.2em,transform shape,line width=0.05em,top color=red,bottom color=red!50!b
 \begin{frame}[plain]
 \titlepage
 \end{frame}
+
+\begin{frame}
+\frametitle{Gradient Estimation}
+\begin{itemize}
+\item Goal: optimize
+$$\max_\theta \sum_x p_\theta(x)f(x)$$
+(optimizing wrt parameters of $f$ is easy)
+\item Discrete $x$, expensive evaluation of $f(x)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Gradient Estimators}
+\begin{itemize}
+\item Score-function estimator (SFE)
+    $$\nabla_\theta \sum_x p_\theta(x)f(x)
+    = \Es{p_\theta(x)}{f(x)\nabla \log p_\theta(x)}$$
+    \begin{itemize}
+    \item High variance, consistent
+    \end{itemize}
+\item Continuous relaxation, $x \approx g(\theta, \epsilon)$
+    $$\nabla_\theta \sum_x p_\theta(x)f(x)
+    \approx \Es{p(\epsilon)}{\nabla_\theta f(g_\theta(\theta, \epsilon))}$$
+    \begin{itemize}
+    \item Biased, lower variance
+    \item Requires relaxable $f$
+    \item Stochastic softmax tricks (SST)
+    \end{itemize}
+\item Focus on improving SFE
+    \begin{itemize}
+    \item Total error most important, but SFE under-explored
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rao-Blackwellization of score function estimator}
+\begin{itemize}
+\item Condition on values of $f(x)$ for $x\in S$
+    \begin{align*}
+    &\nabla_\theta \sum_x p_\theta(x)f(x)\\
+    &= \Es{p_\theta(x)}{f(x)\nabla \log p_\theta(x)}\\
+    &= \sum_{x\in S} p(x)f(x)\nabla \log p_\theta(x)
+    + \Es{p_\theta(x \notin S)}{f(x)\nabla \log p_\theta(x)}
+    \end{align*}
+\item Conditioning on all values $f(x)$ = no variance
+\item Want $S$ to have $x$ with high $p(x)f(x)$
+    \begin{itemize}
+    \item Need to compromise with high $p(x)$
+    \item Use heuristic estimate of $f(x)$?
+    \item What if $x$ is structured?
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Structured Setting}
+\centering
+\begin{tikzpicture}
+\matrix (array) [matrix of nodes,ampersand replacement=\&]
+{
+p(1) \& p(2) \& p(3) \& p(4)\\
+f(1) \& f(2) \& f(3) \& f(4)\\
+};
+\begin{scope}[on background layer]
+\fill[red!10] (array-2-1.north west) rectangle (array-2-2.south east);
+\fill[green!10] (array-2-3.north west) rectangle (array-2-4.south east);
+\end{scope}
+\node [above=1cm of array] (flat) {Flat};
+
+\node [right=4cm of flat] (struct) {Structured};
+\node[fill=green!10, very thick, circle, minimum size=.7cm] (root) [below=0.5cm of struct] {r};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (0) [below left=0.5cm of root] {0};
+\node[fill=green!10, very thick, circle, minimum size=.7cm] (1) [below right=0.5cm of root] {1};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (00) [below left=0.5cm and -.1cm of 0] {00};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (01) [below right=0.5cm and -.1cm of 0] {01};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (10) [below left=0.5cm and -.1cm of 1] {10};
+\node[fill=red!10, very thick, circle, minimum size=.7cm] (11) [below right=0.5cm and -.1cm of 1] {11};
+\edge[->] {root} {0};
+\edge[->] {root} {1};
+\edge[->] {0} {00};
+\edge[->] {0} {01};
+\edge[->] {1} {10};
+\edge[->] {1} {11};
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+\frametitle{Best-first Rao-Blackwellization}
+\begin{itemize}
+\item Modern MCTS
+    \begin{itemize}
+    \item Prior $p(x)$ (forward)
+    \item Cost-to-go estimate $\tilde{V}(x)$ (backward)
+    \item Search procedure that links the two
+    \end{itemize}
+\item Proposal
+    \begin{itemize}
+    \item In many cases, already have the prior $p(x)$
+    \item Estimate cost-to-go with continuous relaxation or cheaper problem-dependent
+        weaker model (Markov transformer)
+    \item 
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{BF RB}
+\includegraphics[height=2in]{img/mcts.png}
+\end{frame}
+
 \begin{frame}[allowframebreaks]
 \frametitle{Citations}
 %\printbibliography
