@@ -198,7 +198,7 @@ f(1) \& f(2) \& f(3) \& f(4)\\
     \begin{itemize}
     \item In many cases, already have the prior $p(x)$
     \item Estimate cost-to-go with continuous relaxation or cheaper problem-dependent
-        weaker model (Markov transformer)
+        weaker model (learned value function approx)
     \item Link the two by marginalization
     \end{itemize}
 \end{itemize}
@@ -217,6 +217,7 @@ Approximate DP when exact is tractable
     \begin{itemize}
     \item HMM with forward algo that doesnt go all the way to end
     \item Bounded width = prior not important
+    \item Experiment with continuous relaxation + learned $\tilde{V}$
     \end{itemize}
 \item Width approx: Utilize prior in large-state HMM
     \begin{itemize}
