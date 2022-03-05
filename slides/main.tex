@@ -75,6 +75,9 @@ ysep=0.2em,transform shape,line width=0.05em,top color=red,bottom color=red!50!b
 $$\max_\theta \sum_x p_\theta(x)f(x)$$
 (optimizing wrt parameters of $f$ is easy)
 \item Discrete $x$, expensive evaluation of $f(x)$
+    \begin{itemize}
+    \item eg $f$ is a giant neural network
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -86,21 +89,40 @@ $$\max_\theta \sum_x p_\theta(x)f(x)$$
     = \Es{p_\theta(x)}{f(x)\nabla \log p_\theta(x)}$$
     \begin{itemize}
     \item High variance, consistent
+    \item Requires multiple evaluations, better with more compute
     \end{itemize}
 \item Continuous relaxation, $x \approx g(\theta, \epsilon)$
     $$\nabla_\theta \sum_x p_\theta(x)f(x)
     \approx \Es{p(\epsilon)}{\nabla_\theta f(g_\theta(\theta, \epsilon))}$$
     \begin{itemize}
     \item Biased, lower variance
+    \item Requires low number of evals, less benefit from more compute
     \item Requires relaxable $f$
     \item Stochastic softmax tricks (SST)
     \end{itemize}
 \item Focus on improving SFE
     \begin{itemize}
-    \item Total error most important, but SFE under-explored
+    \item SFE under-explored
     \end{itemize}
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Rao-Blackwellization}
+\centering
+\begin{tikzpicture}
+\matrix (array) [matrix of nodes,ampersand replacement=\&]
+{
+p(1) \& p(2) \& p(3) \& p(4)\\
+f(1) \& f(2) \& f(3) \& f(4)\\
+};
+\begin{scope}[on background layer]
+\fill[red!10] (array-2-1.north west) rectangle (array-2-2.south east);
+\fill[green!10] (array-2-3.north west) rectangle (array-2-4.south east);
+\end{scope}
+\end{tikzpicture}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Rao-Blackwellization of score function estimator}
@@ -159,8 +181,8 @@ f(1) \& f(2) \& f(3) \& f(4)\\
 \begin{itemize}
 \item Modern MCTS
     \begin{itemize}
-    \item Prior $p(x)$ (forward)
-    \item Cost-to-go estimate $\tilde{V}(x)$ (backward)
+    \item Prior $p(x)$ (limits width)
+    \item Cost-to-go estimate $\tilde{V}(x)$ (limits depth)
     \item Search procedure that links the two
     \end{itemize}
 \item Proposal
@@ -168,7 +190,7 @@ f(1) \& f(2) \& f(3) \& f(4)\\
     \item In many cases, already have the prior $p(x)$
     \item Estimate cost-to-go with continuous relaxation or cheaper problem-dependent
         weaker model (Markov transformer)
-    \item 
+    \item Link the two by marginalization
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -176,6 +198,23 @@ f(1) \& f(2) \& f(3) \& f(4)\\
 \begin{frame}
 \frametitle{BF RB}
 \includegraphics[height=2in]{img/mcts.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Minimal Experiment}
+Approximate DP when exact is tractable
+\begin{itemize}
+\item Depth approx: Learn cost-to-go estimate to bound depth in < 32k state HMM
+    \begin{itemize}
+    \item HMM with forward algo that doesnt go all the way to end
+    \item Bounded width = prior not important
+    \end{itemize}
+\item Width approx: Utilize prior in large-state HMM
+    \begin{itemize}
+    \item Limit num states considered at each time step
+    \end{itemize}
+\item Both
+\end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]
